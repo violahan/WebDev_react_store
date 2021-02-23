@@ -1,25 +1,33 @@
 import React from 'react';
 
+
 class Login extends React.Component{
     render(){
-        return <form className={"login-wrapper"}>
-           <div>
-               <label>Email</label>
-               <div>
-                   <input type={"text"} placeholder={"Email"}/>
-               </div>
-           </div>
+        return <div className={"login-wrapper"}>
+            <form className={"box login-box"}>
 
-            <div>
-                <label>Password</label>
-                <div>
-                    <input type={"text"} placeholder={"Password"}/>
+                <div className="field">
+                    <label className="label">Email</label>
+                    <div className="control">
+                        <input className="input" type="email" placeholder="e.g. alexsmith@gmail.com" />
+                    </div>
                 </div>
-            </div>
-            <div>
-                <button>Login</button>
-            </div>
-        </form>
+
+                <div className="field">
+                    <label className="label">Password</label>
+                    <div className="control">
+                        <input className="input" type="text" placeholder="Password" />
+                    </div>
+
+                </div>
+
+                <div className="control">
+                    <button className="button is-fullwidth is-primary">Login</button>
+                </div>
+            </form>
+        </div>
+
+
     }
 }
 
