@@ -9,7 +9,7 @@ class Login extends React.Component{
                 <div className="field">
                     <label className="label">Email</label>
                     <div className="control">
-                        <input className="input" type="email" placeholder="e.g. alexsmith@gmail.com" />
+                        <input className="input" type="email" placeholder="e.g. viola.han@gmail.com" />
                     </div>
                 </div>
 
@@ -18,7 +18,6 @@ class Login extends React.Component{
                     <div className="control">
                         <input className="input" type="text" placeholder="Password" />
                     </div>
-
                 </div>
 
                 <div className="control">
@@ -30,5 +29,3 @@ class Login extends React.Component{
 
     }
 }
-
-export default Login;
