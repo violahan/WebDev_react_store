@@ -1,7 +1,10 @@
 import React from 'react';
+import NotFound from "./NotFound";
 
 
 class Login extends React.Component{
+
+
     render(){
         return <div className={"login-wrapper"}>
             <form className={"box login-box"}>
@@ -29,3 +32,5 @@ class Login extends React.Component{
 
     }
 }
+
+export default Login;
