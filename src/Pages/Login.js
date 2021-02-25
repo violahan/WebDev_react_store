@@ -3,26 +3,30 @@ import NotFound from "./NotFound";
 
 
 class Login extends React.Component{
-
-    emailRef= React.createRef();
-    passwordRef= React.createRef();
+    //State
+    state = {
+        email: '',
+        password: ''
+    };
 
     handleSubmit = event=>{
     //    1.组织默认事件行为
         event.preventDefault();
 
     //    2.获取表单数据
-        const formData= {
-            email: this.emailRef.current.value,
-            password: this.passwordRef.current.value
-        }
-        console.log(formData);
+        console.log(this.state);
 
     //    3。处理登陆逻辑
     //    4。跳转到首页视图
         this.props.history.push('/');
 
     }
+
+    handleChange=e=>{
+        this.setState({
+            [e.target.name]:e.target.value
+        });
+    };
 
 
     render(){
@@ -32,14 +36,27 @@ class Login extends React.Component{
                 <div className="field">
                     <label className="label">Email</label>
                     <div className="control">
-                        <input className="input" type="email" placeholder="e.g. viola.han@gmail.com" ref={this.emailRef} />
+                        <input className="input"
+                               type="email"
+                               placeholder="e.g. viola.han@gmail.com"
+                               name={"email"}
+                               value={this.state.email}
+                               onChange={this.handleChange}
+                        />
                     </div>
                 </div>
 
                 <div className="field">
                     <label className="label">Password</label>
                     <div className="control">
-                        <input className="input" type="text" placeholder="Password" ref={this.passwordRef}/>
+                        <input className="input"
+                               type="text"
+                               placeholder="Password"
+                               name={"password"}
+                               value={this.state.password}
+                               onChange={this.handleChange}
+
+                        />
                     </div>
                 </div>
 
