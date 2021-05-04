@@ -1,35 +1,34 @@
 import React from 'react';
-import NotFound from "./NotFound";
 
 
-class Login extends React.Component{
+class Login extends React.Component {
     //State
     state = {
         email: '',
         password: ''
     };
 
-    handleSubmit = event=>{
-    //    1.组织默认事件行为
+    handleSubmit = event => {
+        //    1.组织默认事件行为
         event.preventDefault();
 
-    //    2.获取表单数据
+        //    2.获取表单数据
         console.log(this.state);
 
-    //    3。处理登陆逻辑
-    //    4。跳转到首页视图
+        //    3。处理登陆逻辑
+        //    4。跳转到首页视图
         this.props.history.push('/');
 
     }
 
-    handleChange=e=>{
+    handleChange = e => {
         this.setState({
-            [e.target.name]:e.target.value
+            [e.target.name]: e.target.value
         });
     };
 
 
-    render(){
+    render() {
         return <div className={"login-wrapper"}>
             <form className={"box login-box"} onSubmit={this.handleSubmit}>
 
