@@ -3,38 +3,49 @@ import ToolBox from "./ToolBox";
 import Product from "./Product";
 import axios from "../commons/axios";
 import {CSSTransition, TransitionGroup} from "react-transition-group";
-
+import Panel from "./Panel";
+import AddInventory from "./AddInventory";
 
 
 class Products extends React.Component {
 
     state = {
         products: [],
-        sourceProducts:[]
+        sourceProducts: []
     };
 
     componentDidMount() {
-        axios.get('/products').then(response =>{
+        axios.get('/products').then(response => {
             console.log(response.data);
             this.setState({
                 products: response.data,
-                sourceProducts:response.data
+                sourceProducts: response.data
             });
         });
 
     }
 
-    search = text =>{
+    search = text => {
         console.log(text);
-        let _products = [...this.state.sourceProducts]
+        let _products = [...this.state.sourceProducts];
+
         _products = _products.filter(p => {
-          const matchArray=  p.name.match(new RegExp(text, 'gi'))
-            return !!matchArray
-        })
+            const matchArray = p.name.match(new RegExp(text, 'gi'));
+            return !!matchArray;
+        });
 
         this.setState({
             products: _products
-        })
+        });
+    };
+
+    toAdd = () => {
+        Panel.open({
+            component: AddInventory,
+            callback: data =>{
+                console.log('Products Data: ',data);
+            }
+        });
     };
 
 
@@ -59,8 +70,8 @@ class Products extends React.Component {
                                     );
                                 })}
                         </TransitionGroup>
-
                     </div>
+                    <button className={"button is-primary add-btn"} onClick={this.toAdd}>Add Product</button>
                 </div>
             </div>
 
