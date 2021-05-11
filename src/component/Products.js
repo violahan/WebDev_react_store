@@ -1,70 +1,65 @@
 import React from 'react'
 import ToolBox from "./ToolBox";
 import Product from "./Product";
+import axios from "../commons/axios";
+import {CSSTransition, TransitionGroup} from "react-transition-group";
 
 
-class Products extends React.Component{
 
+class Products extends React.Component {
 
-    product=[
-        {
-            id:1,
-            name:'Air Jordan 4',
-            image:'images/1.jpg',
-            tags:'92 Colors',
-            price:11880,
-            status:'available',
-        },
-        {
-            id:2,
-            name:'Nike Paul George PG 3',
-            image:'images/2.jpg',
-            tags:'25 Colors',
-            price:13800,
-            status:'available',
-        },
-        {
-            id:3,
-            name:'Jordan Why Not Zer0.2',
-            image:'images/3.jpg',
-            tags:'16 Colors, y',
-            price:9780,
-            status:'available',
-        },
-        {
-            id:4,
-            name:'Nike Air Foamposite One',
-            image:'images/4.jpg',
-            tags:'84 Colors',
-            price:14629,
-            status:'available',
-        },
-        {
-            id:5,
-            name:'Adidas Harden Vol.3',
-            image:'images/5.jpg',
-            tags:'34 Colors',
-            price:9380,
-            status:'unavailable',
-        },
-    ];
+    state = {
+        products: [],
+        sourceProducts:[]
+    };
+
+    componentDidMount() {
+        axios.get('/products').then(response =>{
+            console.log(response.data);
+            this.setState({
+                products: response.data,
+                sourceProducts:response.data
+            });
+        });
+
+    }
+
+    search = text =>{
+        console.log(text);
+        let _products = [...this.state.sourceProducts]
+        _products = _products.filter(p => {
+          const matchArray=  p.name.match(new RegExp(text, 'gi'))
+            return !!matchArray
+        })
+
+        this.setState({
+            products: _products
+        })
+    };
 
 
     render() {
         return (
             <div>
-                <ToolBox />
+                <ToolBox search={this.search}/>
                 <div className="products">
                     <div className="columns is-multiline is-desktop">
-                        {
-                            this.product.map(p =>{
-                                return(
-                                    <div className="column is-3" key={p.id}>
-                                        <Product product={p}/>
-                                    </div>
-                                )
-                            })
-                        }
+                        <TransitionGroup component={null}>
+                            {
+                                this.state.products.map(p => {
+                                    return (
+                                        <CSSTransition classNames="product-fade"
+                                                       timeout={300}
+                                                       key={p.id}
+                                        >
+                                            <div className="column is-3" key={p.id}>
+                                                <Product product={p}/>
+                                            </div>
+                                        </CSSTransition>
+                                    );
+                                })}
+                        </TransitionGroup>
+
                     </div>
                 </div>
             </div>
@@ -74,4 +69,5 @@ class Products extends React.Component{
     }
 
 }
+
 export default Products;
