@@ -42,39 +42,48 @@ class Products extends React.Component {
     toAdd = () => {
         Panel.open({
             component: AddInventory,
-            callback: data =>{
-                if (data){
+            callback: data => {
+                if (data) {
                     this.add(data);
                 }
             }
         });
     };
 
-    add = product =>{
+    add = product => {
         const _products = [...this.state.products];
         _products.push(product);
         const _sProducts = [...this.state.sourceProducts];
         _sProducts.push(product);
 
         this.setState({
-            products:_products,
+            products: _products,
             sourceProducts: _sProducts
         });
     };
 
-    update = product =>{
+    update = product => {
         const _products = [...this.state.products];
         const _index = _products.findIndex(p => p.id === product.id)
-        _products.splice(_index,1,product)
+        _products.splice(_index, 1, product)
         const _sProducts = [...this.state.sourceProducts];
         const _sIndex = _products.findIndex(p => p.id === product.id)
-        _sProducts.splice(_sIndex,1,product)
+        _sProducts.splice(_sIndex, 1, product)
 
         this.setState({
-            products:_products,
+            products: _products,
             sourceProducts: _sProducts
         });
     };
+
+    delete = id => {
+        const _products = this.state.products.filter(p => p.id !== id)
+        const _sProducts = this.state.sourceProducts.filter(p => p.id !== id)
+        this.setState({
+            products: _products,
+            sourceProducts: _sProducts
+        });
+    }
 
 
     render() {
@@ -92,7 +101,11 @@ class Products extends React.Component {
                                                        key={p.id}
                                         >
                                             <div className="column is-3" key={p.id}>
-                                                <Product product={p} update={this.update}/>
+                                                <Product
+                                                    product={p}
+                                                    update={this.update}
+                                                    delete={this.delete}
+                                                />
                                             </div>
                                         </CSSTransition>
                                     );

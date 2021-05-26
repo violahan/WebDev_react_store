@@ -14,7 +14,7 @@ class EditInventory extends React.Component {
     };
 
     componentDidMount() {
-        const { id, name, image, tags, price, status }= this.props.product;
+        const {id, name, image, tags, price, status} = this.props.product;
         this.setState({
             id,
             name,
@@ -44,7 +44,15 @@ class EditInventory extends React.Component {
 
     };
 
-    showToast= () => {
+    onDelete = () => {
+        axios.delete(`products/${this.state.id}`).then(res => {
+            this.props.deleteProduct(this.state.id)
+            this.props.close();
+            toast.success('Delete Success 🥳');
+        });
+    }
+
+    showToast = () => {
         toast('default');
         toast.info('info');
         toast.success('success');
@@ -101,6 +109,9 @@ class EditInventory extends React.Component {
                     <div className={"field is-grouped is-grouped-centered"}>
                         <div className={"control"}>
                             <button className={"button is-link"}>Submit</button>
+                        </div>
+                        <div className={"control"}>
+                            <button className={"button is-danger"} type={"button"} onClick={this.onDelete}>Delete</button>
                         </div>
                         <div className={"control"}>
                             <button className={"button"}
