@@ -39,7 +39,7 @@ class EditInventory extends React.Component {
         const product = {...this.state};
         axios.put(`products/${this.state.id}`, product).then(res => {
             this.props.close(res.data);
-            toast.success('Edit Success 🥳');
+            toast.success('Edit Success 🧐');
         });
 
     };
@@ -48,7 +48,7 @@ class EditInventory extends React.Component {
         axios.delete(`products/${this.state.id}`).then(res => {
             this.props.deleteProduct(this.state.id)
             this.props.close();
-            toast.success('Delete Success 🥳');
+            toast.success('Delete Success 🥺');
         });
     }
 

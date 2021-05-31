@@ -1,33 +1,64 @@
 import React from 'react';
-import {formatPrice} from "../commons/helper";
+import axios from "../commons/axios";
 import Panel from "./Panel";
+import {toast} from "react-toastify";
+import {formatPrice} from "../commons/helper";
 import EditInventory from "./EditInventory";
 
-class Product extends React.Component{
+class Product extends React.Component {
 
     toEdit = () => {
         Panel.open({
             component: EditInventory,
-            props:{
+            props: {
                 product: this.props.product,
                 deleteProduct: this.props.delete
             },
-            callback: data =>{
-                if (data){
+            callback: data => {
+                if (data) {
                     this.props.update(data);
                 }
             }
         });
     };
 
+    addCart = async () => {
+        try {
+            const {id, name, image, price} = this.props.product;
+
+            const res = await axios.get(`/carts?productId=${id}`);
+
+            const carts = res.data;
+            console.log(carts);
+            if (carts && carts.length > 0) {
+                const cart = carts[0]
+                cart.mount += 1
+                await axios.put(`/carts/${cart.id}`, cart)
+            } else {
+                const cart = {
+                    productId: id,
+                    name,
+                    image,
+                    price,
+                    mount: 1
+                }
+                await axios.post('/carts', cart)
+            }
+            toast.success('Add Cart Success 🥰');
+
+        } catch (error) {
+            toast.error('Add Cart Failed 😤');
+        }
+    };
+
     render() {
-        const { name, image, tags, price, status }= this.props.product
-        const  _pClass = {
+        const {name, image, tags, price, status} = this.props.product;
+        const _pClass = {
             available: 'product',
             unavailable: 'product out-stock'
 
         }
-        return(
+        return (
             <div className={_pClass[status]}>
                 <div className={"p-content"}>
                     <div className={"p-head has-text-right"} onClick={this.toEdit}>
@@ -48,7 +79,7 @@ class Product extends React.Component{
 
                 <div className="p-footer">
                     <p className="price">{formatPrice(price)}</p>
-                    <button className="add-cart" disabled={status === 'unavailable'}>
+                    <button className="add-cart" disabled={status === 'unavailable'} onClick={this.addCart}>
                         <i className="fas fa-shopping-cart"></i>
                         <i className="fas fa-exclamation"></i>
                     </button>
