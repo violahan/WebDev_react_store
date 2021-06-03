@@ -3,12 +3,14 @@ import {BrowserRouter, Switch,Route} from 'react-router-dom';
 import App from './Pages/App';
 import Login from './Pages/Login';
 import NotFound from './Pages/NotFound';
+import Cart from './Pages/Cart';
 
 const Router = () => (
     <BrowserRouter>
         <Switch>
             <Route path={"/"} exact component={App}/>
             <Route path={"/login"} component={Login}/>
+            <Route path={"/cart"} component={Cart}/>
             <Route component={NotFound}/>
         </Switch>
     </BrowserRouter>
