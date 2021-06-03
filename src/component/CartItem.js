@@ -1,14 +1,35 @@
-import React from 'react';
-import Cart from "../Pages/Cart";
+import React,{useState} from 'react';
 import {formatPrice} from "../commons/helper";
+import axios from "../commons/axios";
 
 
 const CartItem = props => {
-    const {name, image, price, mount }= props.cart || {}
+    const [mount, setMount] = useState((props.cart.mount));
+    const {id, name, image, price }= props.cart || {};
     const sumPrice = formatPrice(mount* parseInt(price));
+
+    const handleChange = e => {
+        const _mount = parseInt(e.target.value);
+        setMount(_mount);
+        const newCart = {
+            ...props.cart,
+            mount:_mount
+        }
+        axios.put(`/carts/${id}`,newCart).then(res => {
+            props.updateCart(newCart);
+        });
+    };
+
+    const deleteCart = () => {
+        axios.delete(`/carts/${id}`).then(res => {
+            props.deleteCart(props.cart)
+        })
+
+    }
+
     return(
         <div className={"columns is-vcentered"}>
-            <div className={"column is-narrow"}>
+            <div className={"column is-narrow"} >
                 <img src={image} alt={name} width={"100"}/>
             </div>
 
@@ -21,14 +42,14 @@ const CartItem = props => {
             </div>
 
             <div className={"column"}>
-                <input type={"number"} className={"input num-input"} defaultValue={mount}></input>
+                <input type={"number"} className={"input num-input"} min={1} value={mount} onChange={handleChange}></input>
             </div>
 
             <div className={"column"}>
                 <span className={"sum-price"}>{sumPrice}</span>
             </div>
 
-            <div className={"column is-narrow"}>
+            <div className={"column is-narrow"} onClick={deleteCart}>
                 <span className={"close"}>❌</span>
             </div>
         </div>
