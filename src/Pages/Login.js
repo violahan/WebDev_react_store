@@ -1,61 +1,67 @@
 import React from 'react';
+import {useForm} from 'react-hook-form';
 
 
-class Login extends React.Component {
-    //State
-    state = {
-        email: '',
-        password: ''
-    };
+export default function Login(props) {
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
-    handleSubmit = event => {
-        //    1.组织默认事件行为
-        event.preventDefault();
+    const onSubmit = data => {
 
         //    2.获取表单数据
-        console.log(this.state);
+        console.log(data);
 
         //    3。处理登陆逻辑
         //    4。跳转到首页视图
-        this.props.history.push('/');
+        // this.props.history.push('/');
 
-    }
-
-    handleChange = e => {
-        this.setState({
-            [e.target.name]: e.target.value
-        });
     };
+    console.log(errors);
 
 
-    render() {
-        return <div className={"login-wrapper"}>
-            <form className={"box login-box"} onSubmit={this.handleSubmit}>
+    return(
+        <div className={"login-wrapper"}>
+            <form className={"box login-box"} onSubmit={handleSubmit(onSubmit)}>
 
                 <div className="field">
                     <label className="label">Email</label>
                     <div className="control">
-                        <input className="input"
-                               type="email"
+                        <input
+                               className={`input ${errors.email && 'is-danger'}`}
+                               type="text"
                                placeholder="e.g. viola.han@gmail.com"
-                               name={"email"}
-                               value={this.state.email}
-                               onChange={this.handleChange}
+                               {...register('email',{
+                                   required: 'email is required',
+                                   pattern: {
+                                       value:  /^[A-Za-z0-9]+([_\\.][A-Za-z0-9]+)*@([A-Za-z0-9\\-]+\.)+[A-Za-z]{2,6}$/,
+                                       message: 'invalid email'
+                                   }
+                               })}
                         />
+
+                        {errors.email && (
+                            <p className="helper has-text-danger"> {errors.email.message} </p>
+                        )}
                     </div>
                 </div>
 
                 <div className="field">
                     <label className="label">Password</label>
                     <div className="control">
-                        <input className="input"
+                        <input
+                               className={`input ${errors.password && 'is-danger'}`}
                                type="text"
                                placeholder="Password"
-                               name={"password"}
-                               value={this.state.password}
-                               onChange={this.handleChange}
-
+                               {...register('password',{
+                                   required: 'password is required',
+                                   minLength: {
+                                       value: 6,
+                                       message: 'cannot be less than 6 digits'
+                                   }
+                               })}
                         />
+                        {errors.password && (
+                            <p className="helper has-text-danger"> {errors.password.message} </p>
+                        )}
                     </div>
                 </div>
 
@@ -64,9 +70,6 @@ class Login extends React.Component {
                 </div>
             </form>
         </div>
-
-
-    }
+    )
 }
 
-export default Login;
