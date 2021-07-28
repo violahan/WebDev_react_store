@@ -94,16 +94,19 @@ class Products extends React.Component {
         });
     };
 
-    initCartNum  = async () => {
-        const res = await axios.get('/carts');
+    initCartNum = async () => {
+        const user = global.auth.getUser() || {};
+        const res = await axios.get('/carts', {
+            params: {
+                userId: user.email
+            }
+        });
         const carts = res.data || [];
         const cartNum = carts
-            .map(cart => cart.mount)
-            .reduce((a, value)=> a + value, 0);
+            .map(cart => cart.mount) // [2, 1,2 ]
+            .reduce((a, value) => a + value, 0);
         return cartNum;
     };
-
-
 
     render() {
         return (

@@ -31,6 +31,8 @@ class Product extends React.Component {
         }
 
         try {
+            const user = global.auth.getUser() || {};
+
             const {id, name, image, price} = this.props.product;
 
             const res = await axios.get(`/carts?productId=${id}`);
@@ -47,7 +49,8 @@ class Product extends React.Component {
                     name,
                     image,
                     price,
-                    mount: 1
+                    mount: 1,
+                    userId:user.email
                 }
                 await axios.post('/carts', cart)
             }
