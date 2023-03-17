@@ -2,9 +2,10 @@ const express = require('express');
 const database = require('./db/conn')
 const app = express();
 const PORT = 3000;
+app.use(express.json());
 
-// const userRouter = require('./router/user')
-// app.use(userRouter)
+const userRouter = require('./router/user')
+app.use(userRouter)
 
 
 app.get('/', (req, res)=>{
