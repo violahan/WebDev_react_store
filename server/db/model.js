@@ -10,6 +10,8 @@ const usersSchema = new mongoose.Schema({
         type: String
     },
     type: Number
+}, {
+    versionKey: false
 });
 
 const productsSchema = new mongoose.Schema({
@@ -19,6 +21,8 @@ const productsSchema = new mongoose.Schema({
     tags: String,
     price: String,
     status: String
+},{
+    versionKey: false
 });
 
 const cartSchema = new mongoose.Schema({
@@ -29,6 +33,8 @@ const cartSchema = new mongoose.Schema({
     mount: Number,
     userId: String,
     id: Number
+},{
+    versionKey: false
 })
 
 // Creating model objects
