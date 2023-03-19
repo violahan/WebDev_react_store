@@ -10,6 +10,11 @@ app.use(userRouter)
 const productsRouter = require('./router/products')
 app.use(productsRouter)
 
+const authRouter = require('./router/auth')
+app.use(authRouter)
+
+
+
 
 app.get('/', (req, res)=>{
     res.status(200);

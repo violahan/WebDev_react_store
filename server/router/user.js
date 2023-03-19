@@ -1,7 +1,7 @@
 const express = require ('express')
 const userRouter = express.Router()
 
-const { User, Product} = require('../db/model');
+const { User } = require('../db/model');
 
 userRouter.get("/users", async (req, res) => {
     try{
