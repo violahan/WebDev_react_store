@@ -7,6 +7,9 @@ app.use(express.json());
 const userRouter = require('./router/user')
 app.use(userRouter)
 
+const productsRouter = require('./router/products')
+app.use(productsRouter)
+
 
 app.get('/', (req, res)=>{
     res.status(200);
