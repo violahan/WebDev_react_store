@@ -18,6 +18,12 @@ async function isAuthenticated(email, password) {
     }
 }
 
+const verifyToken = token => {
+    return jwt.verify(token, SECRET, (err, decode) =>
+        decode !== undefined ? decode : err
+    );
+};
+
 async function userExist(email) {
     let result = await User.findOne({email: email}).exec();
     if(result){
@@ -49,6 +55,30 @@ authRouter.post('/auth/login', async (req, res) => {
 });
 
 
+authRouter.post('/auth/register', async (req, res) => {
+    const {email, password, nickname, type} = req.body;
+
+    if (await userExist(email)) {
+        const status = 401;
+        const message = 'Email already exist';
+        return res.status(status).json({status, message});
+    }
+
+    const user = new User({
+        email: email,
+        nickname: nickname,
+        password: password,
+        type: type
+    })
+
+    try {
+        const dataToSave = await user.save();
+        res.status(200).json(dataToSave)
+    }
+    catch (error) {
+        res.status(400).json({message: error.message})
+    }
+})
 
 
 
