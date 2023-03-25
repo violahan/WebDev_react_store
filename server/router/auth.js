@@ -3,12 +3,6 @@ const authRouter = express.Router();
 const { User } = require('../db/model');
 const jwt = require('jsonwebtoken');
 
-const verifyToken = token => {
-    return jwt.verify(token, SECRET, (err, decode) =>
-        decode !== undefined ? decode : err
-    );
-};
-
 authRouter.post('/auth/login', async (req, res) => {
     const {email, password} = req.body;
     if (!(email && password )) {

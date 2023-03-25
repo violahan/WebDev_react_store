@@ -13,6 +13,8 @@ app.use(productsRouter)
 const authRouter = require('./router/auth')
 app.use(authRouter)
 
+const cartsRouter = require('./router/carts')
+app.use(cartsRouter)
 
 
 
