@@ -2,14 +2,14 @@
 const mongoose = require('mongoose');
 
 const usersSchema = new mongoose.Schema({
-    id: Number,
     email: String,
     nickname: String,
     password: {
         select: false,
         type: String
     },
-    type: Number
+    type: Number,
+    token:String
 }, {
     versionKey: false
 });

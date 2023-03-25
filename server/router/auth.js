@@ -3,52 +3,36 @@ const authRouter = express.Router();
 const { User } = require('../db/model');
 const jwt = require('jsonwebtoken');
 
-const SECRET = '123123';
-const expiresIn = '1h';
-const createToken = payload => {
-    return jwt.sign(payload, SECRET, {expiresIn});
-};
-
-async function isAuthenticated(email, password) {
-    let result = await User.findOne({email: email, password: password}).exec();
-    if(result){
-        return true;
-    }else {
-        return false;
-    }
-}
-
 const verifyToken = token => {
     return jwt.verify(token, SECRET, (err, decode) =>
         decode !== undefined ? decode : err
     );
 };
 
-async function userExist(email) {
-    let result = await User.findOne({email: email}).exec();
-    if(result){
-        return true;
-    }else {
-        return false;
-    }
-}
-
 authRouter.post('/auth/login', async (req, res) => {
-    let email = req.body.email;
-    let password = req.body.password;
-
+    const {email, password} = req.body;
+    if (!(email && password )) {
+        return res.status(400).send("All input is required");
+    }
     try {
-        if (await isAuthenticated(email, password)) {
-            console.log("Successful Authentication.")
-            const user = await User.findOne({email: email}).exec();
-            const {nickname, type} = user;
-            const jwToken = createToken({nickname, type, email});
-            return res.status(200).json({"token": jwToken});
-        } else {
-            const status = 401;
-            const message = 'Incorrect email or password';
-            return res.status(status).json({status, message});
+        const user = await User.findOne({ email: email, password: password});
+        if (user){
+            const {email, type} = user;
+            const token = jwt.sign(
+                { id: user._id, email: email, type: type },
+                process.env.TOKEN_KEY,
+                {
+                    expiresIn: "2h",
+                }
+            );
+            user.token = token;
+            user.save();
+            res.status(200).json({"user": user});
         }
+        else {
+            res.status(400).send("Invalid Credentials");
+        }
+
     } catch (error) {
         res.status(500).json({message: error.message})
     }
@@ -57,23 +41,39 @@ authRouter.post('/auth/login', async (req, res) => {
 
 authRouter.post('/auth/register', async (req, res) => {
     const {email, password, nickname, type} = req.body;
+    try{
+        // Validate user input
+        if (!(email && password && nickname && type)) {
+            return res.status(400).send("All input is required");
+        }
 
-    if (await userExist(email)) {
-        const status = 401;
-        const message = 'Email already exist';
-        return res.status(status).json({status, message});
-    }
+        // check if user already exist
+        // Validate if user exist in our database
+        const oldUser = await User.findOne({ email: email });
+        if (oldUser) {
+            return res.status(409).send("User Already Exist. Please Login");
+        }
 
-    const user = new User({
-        email: email,
-        nickname: nickname,
-        password: password,
-        type: type
-    })
+        const user = await User.create({
+            email: email.toLowerCase(),
+            nickname: nickname,
+            password: password,
+            type: type,
+        })
 
-    try {
-        const dataToSave = await user.save();
-        res.status(200).json(dataToSave)
+        const token = jwt.sign(
+            { id: user._id, email: email, type: type },
+            process.env.TOKEN_KEY,
+            {
+                expiresIn: "2h",
+            }
+        );
+        // save user token
+        user.token = token;
+        user.save()
+
+        // return new user
+        res.status(201).json(user);
     }
     catch (error) {
         res.status(400).json({message: error.message})
